@@ -24,3 +24,6 @@ coverage/
 # Editor directories and files
 .vscode/
 .idea/
+
+# upload files
+/uploads/
