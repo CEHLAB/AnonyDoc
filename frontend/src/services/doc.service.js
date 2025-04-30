@@ -1,6 +1,5 @@
 import api from './api';
 
-/* upload multipart */
 export const uploadDoc = (file) => {
   const data = new FormData();
   data.append('file', file);
@@ -14,9 +13,11 @@ export const deleteFile = (id)   => api.delete(`/doc/file/${id}`);
 export const deleteDoc  = (id)   => api.delete(`/doc/${id}`);
 
 
-/* build url download */
 export const downloadUrl = (id) =>
-  `${import.meta.env.VITE_API_URL}/doc/download/${id}`;
+  `${import.meta.env.VITE_API_URL}/doc/download/anony/${id}`;
+
+export const downloadOriginalUrl = (id) =>
+  `${import.meta.env.VITE_API_URL}/doc/download/original/${id}`;
 
 
   

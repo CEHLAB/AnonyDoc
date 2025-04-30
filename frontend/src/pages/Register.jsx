@@ -1,23 +1,48 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../services/auth.service';
+import { EMAIL_REGEX, PASS_REGEX } from '../utils/validation';
 
 export default function Register() {
   const nav = useNavigate();
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
+  const [form, setForm]       = useState({
     firstName: '',
-    lastName: ''
+    lastName: '',
+    email: '',
+    password: ''
   });
+  const [errors, setErrors]   = useState({});
 
   const onChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  const validate = () => {
+    const err = {};
+    if (!form.firstName.trim()) err.firstName = 'Prénom requis';
+    if (!form.lastName.trim())  err.lastName  = 'Nom requis';
+    if (!EMAIL_REGEX.test(form.email))
+      err.email = 'Email invalide (ex : a@b.com)';
+    if (!PASS_REGEX.test(form.password))
+      err.password =
+        '8 + caract., 1 majuscule, 1 chiffre, 1 caractère spécial';
+    return err;
+  };
+
   const submit = async (e) => {
     e.preventDefault();
-    await register(form);
-    nav('/login');
+    const v = validate();
+    if (Object.keys(v).length > 0) {
+      setErrors(v);
+      return;
+    }
+    try {
+      await register(form);
+      nav('/login');
+    } catch (e) {
+      // gérer erreur 400 du backend si besoin
+      const data = e.response?.data?.errors;
+      if (data) setErrors(data);
+    }
   };
 
   return (
@@ -26,56 +51,71 @@ export default function Register() {
         <h2 className="text-2xl font-semibold text-center mb-6">Inscription</h2>
 
         <form onSubmit={submit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 font-medium">Prénom</label>
-              <input
-                name="firstName"
-                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-                onChange={onChange}
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Nom</label>
-              <input
-                name="lastName"
-                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-                onChange={onChange}
-                required
-              />
-            </div>
+          {/* Prénom */}
+          <div>
+            <label className="block mb-1">Prénom</label>
+            <input
+              name="firstName"
+              className="w-full border rounded px-3 py-2"
+              value={form.firstName}
+              onChange={onChange}
+            />
+            {errors.firstName && (
+              <p className="text-red-600 text-sm">{errors.firstName}</p>
+            )}
           </div>
 
+          {/* Nom */}
           <div>
-            <label className="block mb-1 font-medium">Email</label>
+            <label className="block mb-1">Nom</label>
+            <input
+              name="lastName"
+              className="w-full border rounded px-3 py-2"
+              value={form.lastName}
+              onChange={onChange}
+            />
+            {errors.lastName && (
+              <p className="text-red-600 text-sm">{errors.lastName}</p>
+            )}
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block mb-1">Email</label>
             <input
               name="email"
               type="email"
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border rounded px-3 py-2"
+              value={form.email}
               onChange={onChange}
-              required
             />
+            {errors.email && (
+              <p className="text-red-600 text-sm">{errors.email}</p>
+            )}
           </div>
 
+          {/* Mot de passe */}
           <div>
-            <label className="block mb-1 font-medium">Mot de passe</label>
+            <label className="block mb-1">Mot de passe</label>
             <input
               name="password"
               type="password"
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border rounded px-3 py-2"
+              value={form.password}
               onChange={onChange}
-              required
             />
+            {errors.password && (
+              <p className="text-red-600 text-sm">{errors.password}</p>
+            )}
           </div>
 
-          <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded transition">
+          <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded">
             S’inscrire
           </button>
         </form>
 
         <p className="text-center text-sm mt-4">
-          Déjà un compte&nbsp;?{' '}
+          Déjà un compte ?{' '}
           <Link to="/login" className="text-blue-600 hover:underline">
             Se connecter
           </Link>

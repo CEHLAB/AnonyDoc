@@ -1,0 +1,4 @@
+node_modules
+npm-debug.log
+dist            # pas nécessaire en dev
+.env            # ne jamais copier ton .env dans l’image

@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import History from "./pages/History";
 import DocumentDetail from "./pages/DocumentDetail";
+import Settings from "./pages/Settings";
 
 export default function App() {
   return (
@@ -47,6 +48,17 @@ export default function App() {
                 <>
                   <Navbar />
                   <DocumentDetail />
+                </>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute>
+                <>
+                  <Navbar />
+                  <Settings />
                 </>
               </PrivateRoute>
             }

@@ -5,12 +5,10 @@ import HistoryItem from '../components/HistoryItem';
 export default function History() {
   const [docs, setDocs] = useState([]);
 
-  /* ---- recharge la liste sans rien retourner ---- */
   const refresh = () => {
     api.get('/doc').then(({ data }) => setDocs(data));
   };
 
-  /* ---- appel unique au montage ---- */
   useEffect(() => {
     refresh();
   }, []);

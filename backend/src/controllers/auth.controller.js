@@ -48,3 +48,47 @@ export const me = async (req, res) => {
   });
   res.json(user);
 };
+
+export const updateEmail = async (req, res) => {
+  const { currentPassword, newEmail } = req.body;
+  const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+  if (!user) return res.sendStatus(404);
+
+  const valid = await bcrypt.compare(currentPassword, user.password);
+  if (!valid) return res.status(401).json({ error: 'Mot de passe incorrect' });
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { email: newEmail }
+  });
+  res.json({ message: 'Email mis à jour' });
+};
+
+export const updatePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+  if (!user) return res.sendStatus(404);
+
+  const valid = await bcrypt.compare(currentPassword, user.password);
+  if (!valid) return res.status(401).json({ error: 'Mot de passe incorrect' });
+
+  const hash = await bcrypt.hash(newPassword, 10);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { password: hash }
+  });
+  res.json({ message: 'Mot de passe mis à jour' });
+};
+
+
+export const deleteAccount = async (req, res) => {
+  const { currentPassword } = req.body;
+  const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+  if (!user) return res.sendStatus(404);
+
+  const valid = await bcrypt.compare(currentPassword, user.password);
+  if (!valid) return res.status(401).json({ error: 'Mot de passe incorrect' });
+
+  await prisma.user.delete({ where: { id: user.id } });
+  res.json({ message: 'Compte supprimé' });
+};

@@ -1,5 +1,3 @@
-// backend/src/services/openai.service.js
-
 import axios from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -43,7 +41,6 @@ export async function anonymizeText(text) {
       const msg = err.response?.data?.error?.message || err.message;
       console.warn(`OpenAI attempt ${attempt} failed: ${msg}`);
       if (attempt === 2) break;
-      // Petite pause avant retry
       await new Promise((r) => setTimeout(r, 1000 * attempt));
     }
   }

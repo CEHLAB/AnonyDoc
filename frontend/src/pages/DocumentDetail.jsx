@@ -33,8 +33,23 @@ export default function DocumentDetail() {
       <a
         href={downloadUrl(doc.id)}
         target="_blank"
-        className="text-blue-600 underline"
+        rel="noopener noreferrer"
+        className="mt-4 inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
       >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-5 h-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-6-4l-4 4m0 0l-4-4m4 4V4"
+          />
+        </svg>
         Télécharger le fichier anonymisé
       </a>
     </div>

@@ -13,7 +13,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL,
     credentials: true
   })
 );
@@ -24,7 +24,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/doc', docRoutes);
 app.use('/api/ai', aiRoutes); 
 
-app.get('/', (_, res) => res.send('API running'));
 
 app.listen(process.env.PORT, () =>
   console.log(`Server up on http://localhost:${process.env.PORT}`)

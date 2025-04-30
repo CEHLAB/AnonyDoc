@@ -1,0 +1,5 @@
+node_modules
+npm-debug.log
+uploads/*        # monté en volume, pas à copier dans l’image
+prisma/dev.db    # monté en volume
+.env             # ne jamais copier ton .env dans l’image

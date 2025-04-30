@@ -8,13 +8,13 @@ import {
   listDocuments,
   getDoc,
   downloadDocument,
+  downloadOriginalDocument,
   deleteOriginalFile,
   deleteDocument
 } from '../controllers/doc.controller.js';
 
 const router = Router();
 
-// 1. Upload + anonymisation
 router.post(
   '/upload',
   requireAuth,
@@ -22,19 +22,16 @@ router.post(
   uploadAndAnonymize
 );
 
-// 2. Liste (historique)
 router.get('/', requireAuth, listDocuments);
 
-// 3. Détail
 router.get('/:id', requireAuth, getDoc);
 
-// 4. Download anonymisé
-router.get('/download/:id', requireAuth, downloadDocument);
+router.get('/download/anony/:id', requireAuth, downloadDocument);
 
-// 5. Supprimer fichier original
+router.get('/download/original/:id', requireAuth, downloadOriginalDocument);
+
 router.delete('/file/:id', requireAuth, deleteOriginalFile);
 
-// 6. Supprimer toute la ligne
 router.delete('/:id', requireAuth, deleteDocument);
 
 export default router;

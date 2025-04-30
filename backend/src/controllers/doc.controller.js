@@ -1,5 +1,3 @@
-// backend/src/controllers/doc.controller.js
-
 import path from 'path';
 import fs from 'fs/promises';
 import { extractText }   from '../services/extract.service.js';
@@ -39,8 +37,7 @@ export const uploadAndAnonymize = async (req, res) => {
       id         : doc.id,
       filename   : req.file.originalname,
       original,
-      anonymized,
-      downloadUrl: `/api/doc/download/${doc.id}`
+      anonymized
     });
   } catch (e) {
     console.error(e);
@@ -69,8 +66,18 @@ export const downloadDocument = async (req, res) => {
     where: { id: +req.params.id, userId: req.user.id }
   });
   if (!doc || !doc.anonPath) return res.sendStatus(404);
-  const downloadName = path.basename(doc.anonPath);
+  const downloadName = `anon-${path.basename(doc.anonPath)}`;
   res.download(doc.anonPath, downloadName);
+};
+
+export const downloadOriginalDocument = async (req, res) => {
+  const doc = await prisma.document.findUnique({
+    where: { id: +req.params.id, userId: req.user.id }
+  });
+  if (!doc || !doc.anonPath) return res.sendStatus(404);
+  const downloadName = `original-${path.basename(doc.anonPath)}`;
+  
+  res.download(doc.filePath, downloadName);
 };
 
 export const deleteOriginalFile = async (req, res) => {
